@@ -22,7 +22,17 @@ const gameBoard = ( function () {
                 ["", "", ""],
             ];
         }
-        return {printGameBoard, putSymbol, getPosition, resetGameboard};
+        const isFull = () => {
+            for(let i = 0; i < 3; i++) {
+                for(let j = 0; j < 3; j++) {
+                    if (gameBoard[i][j] === "") {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return {printGameBoard, putSymbol, getPosition, resetGameboard, isFull};
 })();
 
 const displayGameBoard = (function () {
@@ -88,52 +98,38 @@ const game = (function() {
         currentPlayer = (currentPlayer === player1) ? player2 : player1;
     }
     const getCurrentPlayer = () => {return currentPlayer;}
+
     const resetGame = () => {   
         gameBoard.resetGameboard();
         displayGameBoard.updateGameBoard();
         currentPlayer = player1;
     }
-
-    const playGame = () => {
-        while (!checkIfWon(gameBoard, currentPlayer)) {
-            let x = parseInt(prompt("Enter the x coordinate"));
-            let y = parseInt(prompt("Enter the y coordinate"));
-            while (!checkValidMove(x, y)) {
-                x = parseInt(prompt("Enter a valid x coordinate"));
-                y = parseInt(prompt("Enter a valid y coordinate"));
-            }
-            currentPlayer.userMove(currentPlayer, x, y);
-            if (checkIfWon(gameBoard, currentPlayer)) {
-                console.log(`${currentPlayer.name} wins!`);
-                break;
-            }
-            currentPlayer = (currentPlayer === player1) ? player2 : player1;
-        }
-    };
     
-    return {startGame, playGame, checkValidMove, getCurrentPlayer, changePlayer, resetGame};
+    const playGame = () => {
+        const cells = document.querySelectorAll('.cell');
+        cells.forEach((cell, index) => {
+            cell.addEventListener('click', () => {
+                const row = Math.floor(index / 3);
+                const column = index % 3;
+                if (game.checkValidMove(row, column)) {
+                    // const user = 
+                    currentPlayer.userMove(currentPlayer, row, column);
+                    if (checkIfWon(gameBoard, currentPlayer)) {
+                        alert(`${currentPlayer.name} wins!`);
+                        resetGame();
+                    }
+                    game.changePlayer();
+                } else if (gameBoard.isFull()) {
+                    alert("It's a tie!");
+                    resetGame();
+                }
+            });
+        });
+    }
+
+    return {playGame};
 })();
 
 
-const cells = document.querySelectorAll('.cell');
-cells.forEach((cell, index) => {
-    cell.addEventListener('click', () => {
-        const row = Math.floor(index / 3);
-        const column = index % 3;
-        console.log(row, column)
-        console.log("HI!");
-        if (game.checkValidMove(row, column)) {
-            const user = game.getCurrentPlayer();
-            user.userMove(user, row, column);
-            if (checkIfWon(gameBoard, user)) {
-                alert(`${user.name} wins!`);
-                game.resetGame();
-            }
-            game.changePlayer();
-        } else {
-            alert("Invalid move, try again");
-        }
-        
-    });
-});
 
+game.playGame();
