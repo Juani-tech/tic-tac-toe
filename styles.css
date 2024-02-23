@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1f1d1a;
+
+}
+
+.container {
+    height: 50vh;
+    width: 50%;
+    background-color: #1f1d1a;
+    display: grid;
+    gap: 10px;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+}
+
+.cell {
+    background-color: #fff;
+    align-self: center;
+    justify-self: center;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.cell:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
