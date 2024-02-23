@@ -130,7 +130,10 @@ cells.forEach((cell, index) => {
                 game.resetGame();
             }
             game.changePlayer();
+        } else {
+            alert("Invalid move, try again");
         }
+        
     });
 });
 
