@@ -1,16 +1,17 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
     min-height: 100vh;
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     background-color: #1f1d1a;
-
 }
 
 .container {
@@ -20,6 +21,7 @@ body {
     display: grid;
     gap: 20px;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    margin-bottom: 2rem;
 }
 
 .cell {
@@ -36,5 +38,67 @@ body {
 
 .cell:hover {
     background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+
+
+header {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+header > p {
+    color: #fff;
+    font-size: 2rem;
+
+}
+.player-names {
+    display: flex;
+    gap: 10px;
+}
+
+.player-names  label {
+    color: #fff;
+    font-size: 1rem;
+
+}
+
+.player-names > input {
+    border: none;
+    border-radius: 5px;
+    font-size: .7rem;
+    padding-left: 10px;
+} 
+
+dialog { 
+    background-color: #f0f0f0;
+    padding: 1rem;
+    /* widht: 300px; */
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#player-form { 
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+#reset-button {
+                grid-column: 2 / 3;
+    background-color: #f0f0f0;
+    padding: .5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
     cursor: pointer;
 }
