@@ -61,33 +61,15 @@ function createPlayer(name, symbol) {
 
 
 
-function checkIfWon(gameBoard, player){
-    for(let i = 0; i < 3; i++) {
-        if (gameBoard.getPosition(i, 0) === player.symbol && gameBoard.getPosition(i, 0) === gameBoard.getPosition(i, 1) && gameBoard.getPosition(i, 0) === gameBoard.getPosition(i, 2)) {
-            return true;
-        }
-        if (gameBoard.getPosition(0, i) === player.symbol && gameBoard.getPosition(0, i) === gameBoard.getPosition(1, i) && gameBoard.getPosition(0, i) === gameBoard.getPosition(2, i)) {
-            return true;
-        }
-    }
-    if (gameBoard.getPosition(0, 0) === player.symbol && gameBoard.getPosition(0, 0) === gameBoard.getPosition(1, 1) && gameBoard.getPosition(0, 0) === gameBoard.getPosition(2, 2)) {
-        return true;
-    }
-    if (gameBoard.getPosition(0, 2) === player.symbol && gameBoard.getPosition(0, 2) === gameBoard.getPosition(1, 1) && gameBoard.getPosition(0, 2) === gameBoard.getPosition(2, 0)) {
-        return true;
-    }
-    return false;
-}
-
-
-
 
 const game = (function() {
-    const startGame= () => {
+    let player1, player2;
+
+    const startGame = () => {
         const dialog = document.querySelector('dialog');
         const form = document.getElementById("player-form");
         const submitButton = document.getElementById("submit-button");
-        let player1, player2;
+
         submitButton.addEventListener("click", (event) => {
             event.preventDefault();
             const player1Name = document.getElementById("player-one-name").value;
@@ -96,9 +78,10 @@ const game = (function() {
             player2 = createPlayer(player2Name, "O");
             dialog.close();
             form.reset();
+            playGame(); 
         });
+
         dialog.showModal();
-        return {player1, player2};
     }
 
     const checkValidMove = (x, y) => {
@@ -107,44 +90,58 @@ const game = (function() {
         }
         return false;
     }
-    // const changePlayer = () => {
-    //     currentPlayer = (currentPlayer === player1) ? player2 : player1;
-    // }
+
 
     const resetGame = () => {   
         gameBoard.resetGameboard();
         displayGameBoard.updateGameBoard();
-        // currentPlayer = player1;
+    }
+
+
+    const checkIfWon = (player) => {
+        for(let i = 0; i < 3; i++) {
+            if (gameBoard.getPosition(i, 0) === player.symbol && gameBoard.getPosition(i, 0) === gameBoard.getPosition(i, 1) && gameBoard.getPosition(i, 0) === gameBoard.getPosition(i, 2)) {
+                return true;
+            }
+            if (gameBoard.getPosition(0, i) === player.symbol && gameBoard.getPosition(0, i) === gameBoard.getPosition(1, i) && gameBoard.getPosition(0, i) === gameBoard.getPosition(2, i)) {
+                return true;
+            }
+        }
+        if (gameBoard.getPosition(0, 0) === player.symbol && gameBoard.getPosition(0, 0) === gameBoard.getPosition(1, 1) && gameBoard.getPosition(0, 0) === gameBoard.getPosition(2, 2)) {
+            return true;
+        }
+        if (gameBoard.getPosition(0, 2) === player.symbol && gameBoard.getPosition(0, 2) === gameBoard.getPosition(1, 1) && gameBoard.getPosition(0, 2) === gameBoard.getPosition(2, 0)) {
+            return true;
+        }
+        return false;
     }
     
-    const playGame = () => {
-        const {player1, player2} = startGame();
-        console.log(player1, player2);
-        const currentPlayer = player1;
 
+    const playGame = () => {
         const cells = document.querySelectorAll('.cell');
+        let currentPlayer = player1;
+
         cells.forEach((cell, index) => {
             cell.addEventListener('click', () => {
                 const row = Math.floor(index / 3);
                 const column = index % 3;
                 if (checkValidMove(row, column)) {
                     currentPlayer.userMove(currentPlayer, row, column);
-                    if (checkIfWon(gameBoard, currentPlayer)) {
+                    if (checkIfWon(currentPlayer)) {
                         alert(`${currentPlayer.name} wins!`);
                         resetGame();
+                    } else if (gameBoard.isFull()) {
+                        alert("It's a tie!");
+                        resetGame();
+                    } else {
+                        currentPlayer = (currentPlayer === player1) ? player2 : player1;
                     }
-                    currentPlayer = (currentPlayer === player1) ? player2 : player1;
-
-                    // changePlayer();
-                } else if (gameBoard.isFull()) {
-                    alert("It's a tie!");
-                    resetGame();
                 }
             });
         });
     }
 
-    return {playGame};
+    return {startGame};
 })();
 
-game.playGame();
+game.startGame();
