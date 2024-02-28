@@ -36,7 +36,22 @@ const gameBoard = ( function () {
 })();
 
 const displayGameBoard = (function () {
-    
+    const gameBoardContainer = document.getElementById("game-board");
+    const initializeGameBoard =() => {
+        for(let i = 0; i < 9; i++) {
+            let cell = document.createElement("div");
+            cell.classList.add("cell");
+            gameBoardContainer.appendChild(cell);
+        }
+    };
+    const resetGameBoard = () => {
+        let containerChilds = document.querySelectorAll('.cell');
+        containerChilds.forEach((cell) => {
+            cell.removeEventListener("click", miFuncionDeEvento);
+        });
+        initializeGameBoard();
+    };
+
     const updateGameBoard = () => {
         let containerChilds = document.querySelectorAll('.cell'); // Obtener las celdas una vez al principio
         containerChilds.forEach((cell, index) => {
@@ -46,13 +61,13 @@ const displayGameBoard = (function () {
             });
         };
     
-        return { updateGameBoard };
+        return { initializeGameBoard, updateGameBoard, resetGameBoard };
 })();
         
 function createPlayer(name, symbol) {
     const userMove = (player, x, y) => {
         gameBoard.putSymbol(x, y, player.symbol);
-        gameBoard.printGameBoard();
+        // gameBoard.printGameBoard();
         displayGameBoard.updateGameBoard();
     }
 
@@ -64,8 +79,9 @@ function createPlayer(name, symbol) {
 
 const game = (function() {
     let player1, player2;
-
+    let currentPlayer;
     const startGame = () => {
+        currentPlayer = player1;
         const dialog = document.querySelector('dialog');
         const form = document.getElementById("player-form");
         const submitButton = document.getElementById("submit-button");
@@ -92,9 +108,12 @@ const game = (function() {
     }
 
 
+
     const resetGame = () => {   
         gameBoard.resetGameboard();
         displayGameBoard.updateGameBoard();
+        clearEventListeners();
+        startGame();
     }
 
 
@@ -116,30 +135,67 @@ const game = (function() {
         return false;
     }
     
-
+    const handleCellClick = (index) => {
+        const row = Math.floor(index / 3);
+        const column = index % 3;
+        if (checkValidMove(row, column)) {
+            currentPlayer.userMove(currentPlayer, row, column);
+            if (checkIfWon(currentPlayer)) {
+                alert(`${currentPlayer.name} wins!`);
+                resetGame();
+            } else if (gameBoard.isFull()) {
+                alert("It's a tie!");
+                resetGame();
+            } else {
+                currentPlayer = (currentPlayer === player1) ? player2 : player1;
+            }
+        }
+    };
+    
     const playGame = () => {
         const cells = document.querySelectorAll('.cell');
-        let currentPlayer = player1;
-
+    
         cells.forEach((cell, index) => {
-            cell.addEventListener('click', () => {
-                const row = Math.floor(index / 3);
-                const column = index % 3;
-                if (checkValidMove(row, column)) {
-                    currentPlayer.userMove(currentPlayer, row, column);
-                    if (checkIfWon(currentPlayer)) {
-                        alert(`${currentPlayer.name} wins!`);
-                        resetGame();
-                    } else if (gameBoard.isFull()) {
-                        alert("It's a tie!");
-                        resetGame();
-                    } else {
-                        currentPlayer = (currentPlayer === player1) ? player2 : player1;
-                    }
-                }
-            });
+            cell.addEventListener('click', handleCellClick(index));
         });
-    }
+    };
+    
+    const clearEventListeners = () => {
+        const cells = document.querySelectorAll('.cell');
+        cells.forEach((cell, index) => {
+            cell.removeEventListener('click', handleCellClick);
+        });
+    };
+
+    // const clearEventListeners = () => {
+    //     const cells = document.querySelectorAll('.cell');
+    //     cells.forEach((cell) => {
+    //         cell.removeEventListener('click', () => {});
+    //     });
+    // };
+    // const playGame = () => {
+    //     const cells = document.querySelectorAll('.cell');
+    //     let currentPlayer = player1;
+
+    //     cells.forEach((cell, index) => {
+    //         cell.addEventListener('click', () => {
+    //             const row = Math.floor(index / 3);
+    //             const column = index % 3;
+    //             if (checkValidMove(row, column)) {
+    //                 currentPlayer.userMove(currentPlayer, row, column);
+    //                 if (checkIfWon(currentPlayer)) {
+    //                     alert(`${currentPlayer.name} wins!`);
+    //                     resetGame();
+    //                 } else if (gameBoard.isFull()) {
+    //                     alert("It's a tie!");
+    //                     resetGame();
+    //                 } else {
+    //                     currentPlayer = (currentPlayer === player1) ? player2 : player1;
+    //                 }
+    //             }
+    //         });
+    //     });
+    // }
 
     return {startGame};
 })();

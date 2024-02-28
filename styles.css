@@ -14,7 +14,7 @@ body {
     background-color: #1f1d1a;
 }
 
-.container {
+#game-board {
     height: 50vh;
     width: 50%;
     background-color: #1f1d1a;
