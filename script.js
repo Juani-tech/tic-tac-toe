@@ -77,17 +77,8 @@ const game = (function() {
     const dialog = document.querySelector('dialog');
     const form = document.getElementById("player-form");
     const submitButton = document.getElementById("submit-button");
-    // form.addEventListener('submit', function(event) {
-    //     const player1Name = document.getElementById("player-one-name").value;
-    //     const player2Name = document.getElementById("player-two-name").value;
-        
-    //     if (player1Name.trim() === '' || player2Name.trim() === '') {
-    //         alert('Please provide names for both players.');
-    //         event.preventDefault(); // Prevent form submission if any required field is empty
-    //     }
-    // });
-
-
+    
+    
     submitButton.addEventListener("click", (event) => {
         event.preventDefault();
         const player1Name = document.getElementById("player-one-name").value;
@@ -100,12 +91,12 @@ const game = (function() {
         form.reset();
         playGame(); 
     });
-
+    
     
     
     const gameBoardContainer = document.getElementById("game-board");
-
-
+    
+    
     const handleCellClick = (row, column) => {
         if (checkValidMove(row, column)) {
             currentPlayer.userMove(currentPlayer, row, column);
@@ -120,11 +111,11 @@ const game = (function() {
             }
         }
     };
-
+    
     const startGame = () => {
         dialog.showModal();
     }
-
+    
     const checkValidMove = (x, y) => {
         if (gameBoard.getPosition(x, y) === "") {
             return true;
