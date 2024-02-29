@@ -35,27 +35,8 @@ const gameBoard = ( function () {
         return {printGameBoard, putSymbol, getPosition, resetGameboard, isFull};
 })();
 
-// const displayGameBoard = (function () {
-//     let containerChilds = document.querySelectorAll('.cell'); // Obtener las celdas una vez al principio
-//     const resetGameBoard = () => {
-//         containerChilds.forEach((cell) => {
-//             cell.textContent = "";
-//         });
-//     };
-
-//     const updateGameBoard = () => {
-//         containerChilds.forEach((cell, index) => {
-//                 const row = Math.floor(index / 3);
-//                 const column = index % 3;
-//                 cell.textContent = gameBoard.getPosition(row, column);
-//             });
-//         };
-    
-//         return { updateGameBoard, resetGameBoard };
-// })();
         
 const displayGameBoard = (function () {
-    // let containerChilds = document.querySelectorAll('.cell');
 
     const resetGameBoard = () => {
         let containerChilds = document.querySelectorAll('.cell');
@@ -82,14 +63,11 @@ const displayGameBoard = (function () {
 function createPlayer(name, symbol) {
     const userMove = (player, x, y) => {
         gameBoard.putSymbol(x, y, player.symbol);
-        // gameBoard.printGameBoard();
         displayGameBoard.updateGameBoard();
     }
 
     return { userMove, symbol, name}
 }
-
-
 
 
 const game = (function() {
@@ -99,7 +77,17 @@ const game = (function() {
     const dialog = document.querySelector('dialog');
     const form = document.getElementById("player-form");
     const submitButton = document.getElementById("submit-button");
-    
+    // form.addEventListener('submit', function(event) {
+    //     const player1Name = document.getElementById("player-one-name").value;
+    //     const player2Name = document.getElementById("player-two-name").value;
+        
+    //     if (player1Name.trim() === '' || player2Name.trim() === '') {
+    //         alert('Please provide names for both players.');
+    //         event.preventDefault(); // Prevent form submission if any required field is empty
+    //     }
+    // });
+
+
     submitButton.addEventListener("click", (event) => {
         event.preventDefault();
         const player1Name = document.getElementById("player-one-name").value;
@@ -135,7 +123,6 @@ const game = (function() {
 
     const startGame = () => {
         dialog.showModal();
-
     }
 
     const checkValidMove = (x, y) => {
