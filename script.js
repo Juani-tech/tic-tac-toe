@@ -91,11 +91,11 @@ function createPlayer(name, symbol) {
 
 
 
-let player1, player2;
-let currentPlayer;
 
 const game = (function() {
-
+    let player1, player2;
+    let currentPlayer;
+    
     const dialog = document.querySelector('dialog');
     const form = document.getElementById("player-form");
     const submitButton = document.getElementById("submit-button");
